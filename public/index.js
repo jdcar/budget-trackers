@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     getData()
   }
 
+  let transactionData = []
   function seedData() {
     var today = new Date();
     const transactionData = [
@@ -168,6 +169,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
       transaction.value *= -1;
     }
 
+    
     // add to beginning of current array of data
     transactions.unshift(transaction);
 
@@ -175,7 +177,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
     populateChart();
     populateTable();
     populateTotal();
-
+    transactionData.push(transaction)
+    seedData()
 
     // also send to server
     // fetch("/api/transaction", {
