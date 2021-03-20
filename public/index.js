@@ -31,17 +31,17 @@ document.addEventListener('DOMContentLoaded', (e) => {
   request.onsuccess = e => {
     db = e.target.result
     console.log(`successfully opened ${db.name}`)
-    seedData()
+    addData()
     getData()
   }
 
   let transactionData = []
-  function seedData() {
+  function addData() {
     var today = new Date();
-    const transactionData = [
-      { name: "breakfast", value: 12, date: today },
-      { name: "train ticket", value: 25, date: today }
-    ];
+    // const transactionData = [
+    //   { name: "breakfast", value: 12, date: today },
+    //   { name: "train ticket", value: 25, date: today }
+    // ];
     const tran = db.transaction(['transactions'], "readwrite")
 
     // Add data from store
@@ -66,18 +66,18 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
   // /my code
 
-  // fetch("/api/transaction")
-  //   .then(response => {
-  //     return response.json();
-  //   })
-  //   .then(data => {
-  //     // save db data on global variable
-  //     transactions = data;
+  fetch("/api/transaction")
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      // save db data on global variable
+      transactions = data;
 
-  //     populateTotal();
-  //     populateTable();
-  //     populateChart();
-  //   });
+      populateTotal();
+      populateTable();
+      populateChart();
+    });
 
   function populateTotal() {
     // reduce transaction amounts to a single total value
@@ -178,38 +178,38 @@ document.addEventListener('DOMContentLoaded', (e) => {
     populateTable();
     populateTotal();
     transactionData.push(transaction)
-    seedData()
+    addData()
 
     // also send to server
-    // fetch("/api/transaction", {
-    //   method: "POST",
-    //   body: JSON.stringify(transaction),
-    //   headers: {
-    //     Accept: "application/json, text/plain, */*",
-    //     "Content-Type": "application/json"
-    //   }
-    // })
-    //   .then(response => {
-    //     return response.json();
-    //   })
-    //   .then(data => {
-    //     if (data.errors) {
-    //       errorEl.textContent = "Missing Information";
-    //     }
-    //     else {
-    //       // clear form
-    //       nameEl.value = "";
-    //       amountEl.value = "";
-    //     }
-    //   })
-    //   .catch(err => {
-    //     // fetch failed, so save in indexed db
-    //     saveRecord(transaction);
+    fetch("/api/transaction", {
+      method: "POST",
+      body: JSON.stringify(transaction),
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        if (data.errors) {
+          errorEl.textContent = "Missing Information";
+        }
+        else {
+          // clear form
+          nameEl.value = "";
+          amountEl.value = "";
+        }
+      })
+      .catch(err => {
+        // fetch failed, so save in indexed db
+        saveRecord(transaction);
 
-    //     // clear form
-    //     nameEl.value = "";
-    //     amountEl.value = "";
-    //   });
+        // clear form
+        nameEl.value = "";
+        amountEl.value = "";
+      });
   }
 
   document.querySelector("#add-btn").onclick = function () {
