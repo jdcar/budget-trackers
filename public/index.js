@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', (e) => {
 
   // Starter code 
@@ -13,11 +11,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
   if (!window.indexedDB) {
     console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
   }
-  var today = new Date();
-  const transactionData = [
-    { name: "breakfast", value: 12, date: today },
-    { name: "train ticket", value: 25, date: today }
-  ];
+
 
   let db
   const request = window.indexedDB.open("budget", 1);
@@ -37,14 +31,27 @@ document.addEventListener('DOMContentLoaded', (e) => {
   request.onsuccess = e => {
     db = e.target.result
     console.log(`successfully opened ${db.name}`)
+    seedData()
+    getData()
+  }
 
+  function seedData() {
+    var today = new Date();
+    const transactionData = [
+      { name: "breakfast", value: 12, date: today },
+      { name: "train ticket", value: 25, date: today }
+    ];
     const tran = db.transaction(['transactions'], "readwrite")
 
     // Add data from store
     const transactionStore = tran.objectStore('transactions')
     transactionData.forEach(transaction => transactionStore.add(transaction))
+  }
 
+  function getData() {
     // Get data from store
+    const tran = db.transaction(['transactions'], "readwrite")
+    const transactionStore = tran.objectStore('transactions')
     const getTranRequest = transactionStore.getAll()
     getTranRequest.onsuccess = e => {
       console.log(getTranRequest.result)
@@ -53,7 +60,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
       populateTable();
       populateChart();
     }
+
   }
+
   // /my code
 
   // fetch("/api/transaction")
@@ -167,36 +176,37 @@ document.addEventListener('DOMContentLoaded', (e) => {
     populateTable();
     populateTotal();
 
-    // also send to server
-    fetch("/api/transaction", {
-      method: "POST",
-      body: JSON.stringify(transaction),
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json"
-      }
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        if (data.errors) {
-          errorEl.textContent = "Missing Information";
-        }
-        else {
-          // clear form
-          nameEl.value = "";
-          amountEl.value = "";
-        }
-      })
-      .catch(err => {
-        // fetch failed, so save in indexed db
-        saveRecord(transaction);
 
-        // clear form
-        nameEl.value = "";
-        amountEl.value = "";
-      });
+    // also send to server
+    // fetch("/api/transaction", {
+    //   method: "POST",
+    //   body: JSON.stringify(transaction),
+    //   headers: {
+    //     Accept: "application/json, text/plain, */*",
+    //     "Content-Type": "application/json"
+    //   }
+    // })
+    //   .then(response => {
+    //     return response.json();
+    //   })
+    //   .then(data => {
+    //     if (data.errors) {
+    //       errorEl.textContent = "Missing Information";
+    //     }
+    //     else {
+    //       // clear form
+    //       nameEl.value = "";
+    //       amountEl.value = "";
+    //     }
+    //   })
+    //   .catch(err => {
+    //     // fetch failed, so save in indexed db
+    //     saveRecord(transaction);
+
+    //     // clear form
+    //     nameEl.value = "";
+    //     amountEl.value = "";
+    //   });
   }
 
   document.querySelector("#add-btn").onclick = function () {
