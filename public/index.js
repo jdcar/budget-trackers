@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', (e) => {
 
   // Starter code 
-  let variableName = 0;
 
   let transactions = [];
   let myChart;
