@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     populateTable();
     populateTotal();
 
-    transactionData.push(transaction)
+    // transactionData.push(transaction)
 
     transactionData.forEach(element => {
       if (!unique.includes(element)) {
