@@ -177,7 +177,14 @@ document.addEventListener('DOMContentLoaded', (e) => {
     populateChart();
     populateTable();
     populateTotal();
+
     transactionData.push(transaction)
+
+    transactionData.forEach(element => {
+      if (!unique.includes(element)) {
+        unique.push(element)
+      }
+    })
     addData()
 
     // also send to server
